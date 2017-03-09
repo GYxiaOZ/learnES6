@@ -1,0 +1,71 @@
+## ECMAscript6 学习2
+
+### Array对象方法
+
+1. Array.from  
+    方法用于将两类对象转为真正的数组：类似数组的对象（array-like object）和可遍历（iterable）的对象（包括ES6新增的数据结构Set和Map）。  
+    任何有length属性的对象，都可以通过Array.from方法转为数组。    
+    Array.from() 还可以接受第二个参数，作用类似于数组的map方法，用来对每个元素进行处理。
+
+    ```
+        let array = [0,1,2,3,4];
+        let arrNew = Array.from(array, x => x * x);
+        console.log(arrNew);
+        // 等同于
+        let arrNew = Array.from(array).map(x => x * x);
+    ```
+
+2. Array.of方法用于将一组值，转换为数组。  
+    `Array.of(3, 11, 8) // [3,11,8] `  
+    这个方法的主要目的，是弥补数组构造函数Array()的不足。因为参数个数的不同，会导致Array()的行为有差异。  
+    ```
+        Array() // []
+        Array(3) // [undefined, undefined, undefined]
+        Array(3,11,8) // [3, 11, 8]
+    ```  
+    上面代码说明，只有当参数个数不少于2个，Array()才会返回由参数组成的新数组。
+
+3. 数组实例的find方法  
+    用于找出第一个符合条件的数组成员。它的参数是一个回调函数，所有数组成员依次执行该回调函数，直到找出第一个返回值为true的成员，然后返回该成员。如果没有符合条件的成员，则返回undefined。  
+    ```
+        let array = [1, 4, -5, 10].find((n) => n < 0);
+        document.write("array:", array);
+        上面代码找出数组中第一个小于0的成员。
+        let array = [1, 5, 10, 15].find(function(value, index, arr) {
+          return value > 9;
+        }) 
+        document.write(array);  // 10
+        上面代码中，find方法的回调函数可以接受三个参数，依次为当前的值、当前的位置和原数组。
+    ```
+
+4. 数组实例的findIndex方法  
+    用法与find方法非常类似，返回第一个符合条件的数组成员的位置，如果所有成员都不符合条件，则返回-1。  
+    ```
+        let index = [1, 5, 10, 15].findIndex(function(value, index, arr) {
+          return value > 9;
+        }) 
+        document.write(index);  // 2
+    ```
+    这两个方法都可以接受第二个参数，用来绑定回调函数的this对象。  
+    另外，这两个方法都可以发现NaN，弥补了数组的IndexOf方法的不足。  
+    ```
+        [NaN].indexOf(NaN) // -1
+        [NaN].findIndex(y => Object.is(NaN, y)) // 0
+    ```  
+    上面代码中，indexOf方法无法识别数组的NaN成员，但是findIndex方法可以借助Object.is方法做到。
+
+5. fill()使用给定值，填充一个数组。  
+    fill方法用于空数组的初始化非常方便。数组中已有的元素，会被全部抹去。  
+    fill()还可以接受第二个和第三个参数，用于指定填充的起始位置和结束位置。  
+    ```
+        let newArr = ['a', 'b', 'c'].fill(7, 1, 2)
+        document.write(newArr);   // ['a', 7, 'c']
+    ```
+
+6. entries()、keys()、values()  
+    用于遍历数组。它们都返回一个遍历器，可以用for...of循环进行遍历，唯一的区别是keys()是对键名的遍历、values()是对键值的遍历，entries()是对键值对的遍历。  
+    ```
+        for (let index of ['a', 'b'].keys()) {
+          document.write(index);
+        }
+    ```
