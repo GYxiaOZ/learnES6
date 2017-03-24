@@ -157,3 +157,25 @@ throw方法主要是配合Generator函数使用，一般的遍历器用不到这
 
 ### 7.for...of循环
 
+迭代器对象允许像 CLI IEnumerable 或者 Java Iterable 一样自定义迭代器。将for..in转换为自定义的基于迭代器的形如for..of的迭代，不需要实现一个数组，支持像 LINQ 一样的惰性设计模式。
+
+```javascript
+    let fibonacci = {
+      [Symbol.iterator]() {
+        let pre = 0, cur = 1;
+        return {
+          next() {
+            [pre, cur] = [cur, pre + cur];
+            return { done: false, value: cur }
+          }
+        }
+      }
+    }
+     
+    for (var n of fibonacci) {
+      // truncate the sequence at 1000
+      if (n > 1000)
+        break;
+      document.write(n);
+    }
+```
